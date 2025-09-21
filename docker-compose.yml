@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  lug-distro:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: lug-distro:latest
+    container_name: lug-distro-container
+    hostname: lug-distro
+    privileged: true
+    restart: unless-stopped
+    ports:
+      - "2222:22"  # SSH access
+      - "8080:80"   # HTTP (for future web services)
+      - "8443:443"  # HTTPS (for future web services)
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - lug-data:/home/luguser/data
+      - lug-logs:/var/log
+    environment:
+      - TERM=xterm-256color
+      - DEBIAN_FRONTEND=noninteractive
+    networks:
+      - lug-network
+    command: /sbin/init
+
+  # Optional development container with mounted source
+  lug-distro-dev:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: lug-distro:dev
+    container_name: lug-distro-dev
+    hostname: lug-distro-dev
+    privileged: true
+    profiles:
+      - dev
+    ports:
+      - "2223:22"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - .:/workspace
+      - lug-dev-data:/home/luguser/data
+    environment:
+      - TERM=xterm-256color
+      - DEBIAN_FRONTEND=noninteractive
+    networks:
+      - lug-network
+    command: /bin/bash
+
+volumes:
+  lug-data:
+    driver: local
+  lug-logs:
+    driver: local
+  lug-dev-data:
+    driver: local
+
+networks:
+  lug-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
