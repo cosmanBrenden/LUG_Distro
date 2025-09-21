@@ -30,7 +30,10 @@ RUN apt-get update && \
         openssh-server \
         rsyslog \
         cron \
-        locales && \
+        locales \
+        linux-image-amd64 \
+        grub-pc \
+        live-boot && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

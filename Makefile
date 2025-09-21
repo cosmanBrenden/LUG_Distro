@@ -4,7 +4,7 @@ IMAGE_NAME = $(DISTRO_NAME):$(DISTRO_VERSION)
 IMAGE_LATEST = $(DISTRO_NAME):latest
 CONTAINER_NAME = $(DISTRO_NAME)-container
 
-.PHONY: help build run stop clean shell logs pull-base
+.PHONY: help build run stop clean shell logs pull-base iso extract-rootfs check-iso-deps
 
 help:
 	@echo "LUG Distro Build System"
@@ -20,6 +20,9 @@ help:
 	@echo "  logs         - Show container logs"
 	@echo "  pull-base    - Pull latest Debian base image"
 	@echo "  rebuild      - Clean and rebuild everything"
+	@echo "  iso          - Build bootable ISO image"
+	@echo "  extract-rootfs - Extract filesystem from Docker image"
+	@echo "  check-iso-deps - Check ISO build dependencies"
 	@echo ""
 
 build:
@@ -77,9 +80,20 @@ dev-build:
 	@echo "Building development image..."
 	docker build --no-cache -t $(DISTRO_NAME):dev -f docker/Dockerfile .
 
-iso:
-	@echo "ISO generation not yet implemented"
-	@echo "This would generate a bootable ISO image"
+iso: build check-iso-deps
+	@echo "Building ISO image..."
+	./scripts/build-iso.sh
+
+extract-rootfs: build
+	@echo "Extracting filesystem..."
+	./scripts/extract-rootfs.sh
+
+check-iso-deps:
+	@echo "Checking ISO build dependencies..."
+	@command -v xorriso >/dev/null 2>&1 || { echo "Error: xorriso not found. Install with: sudo apt install xorriso"; exit 1; }
+	@command -v grub-mkrescue >/dev/null 2>&1 || { echo "Error: grub-mkrescue not found. Install with: sudo apt install grub-pc-bin grub-efi-amd64-bin"; exit 1; }
+	@command -v mksquashfs >/dev/null 2>&1 || { echo "Error: mksquashfs not found. Install with: sudo apt install squashfs-tools"; exit 1; }
+	@echo "All dependencies found!"
 
 install:
 	@echo "Installation scripts not yet implemented"
