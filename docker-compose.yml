@@ -11,9 +11,9 @@ services:
     privileged: true
     restart: unless-stopped
     ports:
-      - "2222:22"  # SSH access
-      - "8080:80"   # HTTP (for future web services)
-      - "8443:443"  # HTTPS (for future web services)
+      - "2222:22"
+      - "8080:80"
+      - "8443:443"
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - lug-data:/home/luguser/data
@@ -25,7 +25,6 @@ services:
       - lug-network
     command: /sbin/init
 
-  # Optional development container with mounted source
   lug-distro-dev:
     build:
       context: .

@@ -1,4 +1,3 @@
-# LUG Distro Build System
 DISTRO_NAME = lug-distro
 DISTRO_VERSION = 1.0.0
 IMAGE_NAME = $(DISTRO_NAME):$(DISTRO_VERSION)
@@ -74,7 +73,6 @@ logs:
 rebuild: clean pull-base build
 	@echo "Rebuild complete!"
 
-# Development targets
 dev-build:
 	@echo "Building development image..."
 	docker build --no-cache -t $(DISTRO_NAME):dev -f docker/Dockerfile .
