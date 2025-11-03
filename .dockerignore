@@ -1,0 +1,33 @@
+# Build artifacts
+build/
+*.iso
+*.img
+*.log
+
+# Node modules
+node_modules/
+package-lock.json
+npm-debug.log
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+*.md
+!README.md
+
+# Temporary files
+*.tmp
+tmp/
+temp/

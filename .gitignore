@@ -1,0 +1,39 @@
+# Build artifacts
+build/
+*.iso
+*.img
+*.log
+*.sha256
+
+# Live-build generated files
+.build/
+binary/
+cache/
+chroot/
+chroot.files
+chroot.packages.install
+chroot.packages.live
+config/
+
+# Node modules
+node_modules/
+package-lock.json
+npm-debug.log
+yarn.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.bak
+
+# Temporary files
+*.tmp
+tmp/
+temp/
