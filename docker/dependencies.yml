@@ -1,0 +1,32 @@
+# packages to install in the iso
+# they install in order, so put dependencies first if you actually care
+
+apt_packages:
+  - git
+  - curl
+  - wget
+  - build-essential
+  - vim
+  - htop
+  - tmux
+  
+  # add whatever else you need
+  # - package-name
+
+snap_packages:
+  # format: name: classic (true/false)
+  # - name: code
+  #   classic: true
+  
+pip_packages:
+  # python stuff if you're into that
+  # - requests
+  # - numpy
+
+# ppas and other repos to add before installing
+apt_repositories:
+  # - ppa:example/ppa
+  
+# gpg keys for repos (just urls)
+apt_keys:
+  # - https://example.com/key.gpg

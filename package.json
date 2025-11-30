@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "build": "docker build -t iso-builder .",
+    "start": "docker run --rm --privileged -v $(pwd):/output iso-builder",
+    "start:keep": "docker run --rm --privileged -v $(pwd):/output iso-builder --keep",
+    "clean": "rm -rf container",
+    "vm": "qemu-system-x86_64 -cdrom container/build.iso -m 4096 -enable-kvm -cpu host -smp 2",
+    "clean:docker": "docker rmi iso-builder",
+    "clean:all": "npm run clean && npm run clean:docker"
+  }
+}

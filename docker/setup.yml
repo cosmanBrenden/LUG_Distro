@@ -1,0 +1,41 @@
+# setup config for the iso thing
+# commands run by priority (lower = first), then whatever order they're in
+# just use 0-100 for priority, don't overthink it
+
+commands:
+  - name: "Update system"
+    priority: 10
+    command: "apt-get update && apt-get upgrade -y"
+    description: "Update package lists and upgrade existing packages"
+    
+  - name: "Set timezone"
+    priority: 20
+    command: "ln -sf /usr/share/zoneinfo/America/Toronto /etc/localtime"
+    description: "Set system timezone"
+    
+  - name: "Create custom user"
+    priority: 30
+    command: "useradd -m -s /bin/bash customuser && echo 'customuser:password' | chpasswd"
+    description: "Create a custom user account"
+    
+  # throw your commands in here
+  # - name: "whatever you want to call it"
+  #   priority: 40
+  #   command: "bash goes here"
+  #   description: "write something so you remember what this does later"
+    
+  - name: "Clean package cache"
+    priority: 90
+    command: "apt-get clean && apt-get autoremove -y"
+    description: "Clean up package manager cache"
+
+# copy files into the iso if you need to
+files:
+  # - source: "./myconfig.conf"
+  #   destination: "/etc/myconfig.conf"
+  #   permissions: "644"
+  
+# system stuff
+configurations:
+  hostname: "custom-neon"
+  # default_user: "customuser"
