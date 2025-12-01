@@ -24,6 +24,9 @@ WORKDIR /iso-builder
 # Copy configuration files
 COPY docker/dependencies.yml docker/setup.yml ./
 
+# Copy files directory if it exists
+COPY docker/files* ./files/
+
 # Copy the build script
 COPY docker/build.py ./
 

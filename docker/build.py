@@ -131,6 +131,39 @@ def install_dependencies():
     os.remove(script_path)
     print("Dependencies installed!")
 
+def copy_files_from_paths_json():
+    """Copy files based on files/paths.json mapping"""
+    paths_json = "files/paths.json"
+    
+    if not os.path.exists(paths_json):
+        print("No files/paths.json found, skipping file copy...")
+        return
+    
+    print("Copying files from files/ directory...")
+    
+    try:
+        import json
+        with open(paths_json, 'r') as f:
+            file_mappings = json.load(f)
+        
+        for filename, dest_path in file_mappings.items():
+            src = f"files/{filename}"
+            dst = f"{SQUASHFS_DIR}{dest_path}"
+            
+            if not os.path.exists(src):
+                print(f"Warning: {src} not found, skipping...")
+                continue
+            
+            # Create destination directory if it doesn't exist
+            dest_dir = os.path.dirname(dst)
+            os.makedirs(dest_dir, exist_ok=True)
+            
+            print(f"  {filename} -> {dest_path}")
+            shutil.copy(src, dst)
+    
+    except Exception as e:
+        print(f"Error copying files: {e}")
+
 def run_setup():
     """Execute setup commands from setup.yml"""
     print("Running setup commands...")
@@ -142,11 +175,19 @@ def run_setup():
         with open(f"{SQUASHFS_DIR}/etc/hostname", 'w') as f:
             f.write(f"{hostname}\n")
     
-    # Copy files
+    # Copy files from files/paths.json
+    copy_files_from_paths_json()
+    
+    # Copy files from setup.yml (legacy support)
     if setup.get('files'):
         for file_op in setup['files']:
             src = file_op['source']
             dst = f"{SQUASHFS_DIR}{file_op['destination']}"
+            
+            # Create destination directory if it doesn't exist
+            dest_dir = os.path.dirname(dst)
+            os.makedirs(dest_dir, exist_ok=True)
+            
             shutil.copy(src, dst)
             if file_op.get('permissions'):
                 os.chmod(dst, int(file_op['permissions'], 8))
